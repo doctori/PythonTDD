@@ -16,7 +16,7 @@ class NewVisitorTest(unittest.TestCase):
 		self.browser.get('http://localhost:8000')
 		# le titre de la page est 'To-Do' et le titre sur la page
 		self.assertIn('To-Do', self.browser.title)
-		header_text = self.browser.find_element_by_tag_name('h1')
+		header_text = self.browser.find_element_by_tag_name('h1').text
 		self.assertIn('To-Do', header_text)
 		
 		# L'utilisateur est incvité a saisir une action 'To-Do'
@@ -28,12 +28,13 @@ class NewVisitorTest(unittest.TestCase):
 		# L'utilisateur saisi "Acheter du mortier"
 		inputbox.send_keys('Acheter du mortier')
 		#Après a voir saisi l'element et appuyé sur ENTRER la page se met a jout et la page liste l'item
-		inputbox_send_keys(Keys.ENTER)
+		inputbox.send_keys(Keys.ENTER)
 		
 		table = self.browser.find_element_by_id('id_list_table')
 		rows = table.find_elements_by_tag_name('tr')
-		seld.assertTrue(
-			any(row.text == '1: Acheter du mortier' for row in rows)
+		self.assertTrue(
+			any(row.text == '1: Acheter du mortier' for row in rows),
+			" New To-Do Item did not appear in table"
 		)
 		#Il reste un champ de saisie pour ajouter un item
 		# L'utilisateur y ajoute "Faire un mur"
