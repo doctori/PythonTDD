@@ -71,7 +71,7 @@ class NewVisitorTest(LiveServerTestCase):
 		page_text = self.browser.find_element_by_tag_name('body').text
 		self.assertNotIn('Acheter du mortier',page_text)
 		self.assertNotIn('Faire un mur',page_text)
-		self.check_for_row_in_list_table('1: Acheter du mortier')
+		self.check_for_row_in_list_table('1: Acheter des raisins')
 		
 		
 		
