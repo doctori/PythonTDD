@@ -49,6 +49,12 @@ class NewVisitorTest(LiveServerTestCase):
 		#Il reste un champ de saisie pour ajouter un item
 		# L'utilisateur y ajoute "Faire un mur"
 		inputbox = self.browser.find_element_by_id('id_new_item')
+		# L'input box doit aussi etre centrée
+		self.assertAlmostEqual(
+			inputbox.location['x'] + inputbox.size['width']/2,
+			512,
+			delta=5
+		)
 		inputbox.send_keys('Faire un mur')
 		inputbox.send_keys(Keys.ENTER)		
 		self.check_for_row_in_list_table('1: Acheter du mortier')
