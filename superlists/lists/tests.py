@@ -24,7 +24,44 @@ class ItemModelTest(TestCase):
 		second_saved_item = saved_items[1]
 		self.assertEqual(first_saved_item.text,'First List Item')
 		self.assertEqual(second_saved_item.text,'Second List Item')
+class ListViewTest(TestCase):
+	def test_uses_list_template(self):
+		response = self.client.get('/lists/unique-list-name/')
+		self.assertTemplateUsed(response,'list.html')
+		
+	def test_displays_all_list_items(self):
+		Item.objects.create(text = 'item1')
+		Item.objects.create(text = 'item2')
+		
+		response = self.client.get('/lists/unique-list-name/')
+		
+		self.assertContains(response,'item1')
+		self.assertContains(response,'item2')
+class NewListTest(TestCase):
+	def test_saving_a_POST_request(self):
+		self.client.post(
+			'/lists/new',
+			data={'item_text': 'A new list Item'}
+        )
+		self.assertEqual(Item.objects.count(), 1)
+		new_item = Item.objects.first()
+		self.assertEqual(new_item.text, 'A new list Item')
 
+	def test_redirects_after_POST(self):
+		response = self.client.post(
+			'/lists/new',
+			data={'item_text': 'A new list Item'}
+        )
+		self.assertRedirects(response,'/lists/unique-list-name/')
+	
+	def test_new_list_only_saves_item_when_necessary(self):
+		self.client.post(
+			'/lists/new',
+			data={'item_text': ''}
+		)
+		self.assertEqual(Item.objects.count(), 0)	
+		
+		
 class HomePageTest(TestCase):
 
 	def test_root_url_resolves_to_home_page_view(self):
@@ -37,35 +74,7 @@ class HomePageTest(TestCase):
 		expected_html = render_to_string('home.html')
 		self.assertEqual(response.content.decode(), expected_html)
 	
-	def test_home_page_can_save_a_POST_request(self):
-		request = HttpRequest()
-		request.method = 'POST'
-		request.POST['item_text'] = 'A new list Item'
-
-		response = home_page(request)
-
-		self.assertEqual(Item.objects.count(), 1)
-		new_item = Item.objects.first()
-		self.assertEqual(new_item.text, 'A new list Item')
-
-	def test_home_page_redirects_after_POST(self):
-		request = HttpRequest()
-		request.method = 'POST'
-		request.POST['item_text'] = 'A new list Item'
-
-		response = home_page(request)
-		self.assertEqual(response.status_code, 302)
-		self.assertEqual(response['location'], '/')
-	def test_home_page_displays_all_list_items(self):
-		Item.objects.create(text = 'item1')
-		Item.objects.create(text = 'item2')
-		request = HttpRequest()
-		response = home_page(request)
+	
 		
-		self.assertIn('item1',response.content.decode())
-		self.assertIn('item2',response.content.decode())
-	def test_home_page_only_saves_item_when_necessary(self):
-		request = HttpRequest()
-		home_page(request)
-		self.assertEqual(Item.objects.count(), 0)
+
 
