@@ -1,8 +1,7 @@
 from django.shortcuts import render,redirect
 from lists.models import Item,List
 def home_page(request):
-	items = Item.objects.all()
-	return render(request, 'home.html',{'items':items})
+	return render(request, 'home.html')
 
 def view_list(request,list_id):
 	list_ = List.objects.get(id=list_id)
