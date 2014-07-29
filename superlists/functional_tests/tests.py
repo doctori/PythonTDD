@@ -19,14 +19,20 @@ class NewVisitorTest(LiveServerTestCase):
 
 	def test_can_start_a_list_and_retrieve_it_later(self):
 		#acces a la page de garde
+		self.browser.set_window_size(1024,768)
 		self.browser.get(self.live_server_url)
 		# le titre de la page est 'To-Do' et le titre sur la page
 		self.assertIn('To-Do', self.browser.title)
 		header_text = self.browser.find_element_by_tag_name('h1').text
 		self.assertIn('To-Do', header_text)
-		
-		# L'utilisateur est incvité a saisir une action 'To-Do'
+		#le champ de saisi est bien centré
+		# L'utilisateur est invité a saisir une action 'To-Do'
 		inputbox = self.browser.find_element_by_id('id_new_item')
+		self.assertAlmostEqual(
+			inputbox.location['x'] + inputbox.size['width']/2,
+			512,
+			delta=5
+		)
 		self.assertEqual(
 			inputbox.get_attribute('placeholder'),
 			'Enter a to-do item'
