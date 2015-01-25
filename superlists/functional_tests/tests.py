@@ -1,10 +1,10 @@
 import sys
-from django.contrib.staticfiles.testing import StaticLiveServerCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
 
-class NewVisitorTest(StaticLiveServerCase):
+class NewVisitorTest(StaticLiveServerTestCase):
 	
 	@classmethod
 	def setUpClass(cls):
