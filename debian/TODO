@@ -1,0 +1,6 @@
+requires : python3.2 python3-pip gunicorn nginx
+python module required : django==1.7 selenium
+mkdir ./database
+#creation de la base et update du schema : 
+python3.2 manage.py migrate --no-input
+

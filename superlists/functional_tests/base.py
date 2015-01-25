@@ -1,10 +1,12 @@
 import sys
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+
+from unittest import skip
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
 
-class NewVisitorTest(StaticLiveServerTestCase):
+class FunctionalTest(StaticLiveServerTestCase):
 	
 	@classmethod
 	def setUpClass(cls):
@@ -31,15 +33,22 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		table = self.browser.find_element_by_id('id_list_table')
 		rows = table.find_elements_by_tag_name('tr')
 		self.assertIn(row_text, [row.text for row in rows])
-	def test_layout_and_styling(self):
-		self.browser.get(self.server_url)
-		self.browser.set_window_size(1024,768)
-		inputbox = self.browser.find_element_by_id('id_new_item')
-		self.assertAlmostEqual(
-			inputbox.location['x'] + inputbox.size['width']/2,
-			512,
-			delta=5
-		)
+
+class NewVisitorTest(FunctionalTest):
+	@skip
+	def test_cannot_add_empty_list_item(self):
+		#L'utilisateur arrive sur la page principale et essaye d'ajouter un item vide
+		# il appuie sur entrÉ
+		
+		#rafraichissement de la page principale avec un message d'erreur
+		
+		#L'utilisateur saisi maintenant une valeur correcte et appuie sur entré et ça fonctionne normalement
+
+		# l'utilisateur essaye encore de saisir un champ vide
+		# le même message d'erreur que a premiere fois est affiché
+		
+		# L'utilisateur saisie cette fois une valeur correcte
+		self.fail('Write me!');
 	def test_can_start_a_list_and_retrieve_it_later(self):
 		#acces a la page de garde
 		self.browser.get(self.server_url)
@@ -95,7 +104,19 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		self.assertNotIn('Acheter du mortier',page_text)
 		self.assertNotIn('Faire un mur',page_text)
 		self.check_for_row_in_list_table('1: Acheter des raisins')
-		
+
+
+class LayoutAndStylingTest(FunctionalTest):
+
+	def test_layout_and_styling(self):
+		self.browser.get(self.server_url)
+		self.browser.set_window_size(1024,768)
+		inputbox = self.browser.find_element_by_id('id_new_item')
+		self.assertAlmostEqual(
+			inputbox.location['x'] + inputbox.size['width']/2,
+			512,
+			delta=5
+		)		
 		
 		
 
