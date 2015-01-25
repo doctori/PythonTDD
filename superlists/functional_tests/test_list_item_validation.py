@@ -31,6 +31,4 @@ class ItemValidationTest(FunctionalTest):
 		self.check_for_row_in_list_table('2: Acheter du vin')
 			
 		
-		self.fail('Write me!');
-		
 

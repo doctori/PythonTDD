@@ -8,8 +8,15 @@ def view_list(request,list_id):
 	#We retrieve the list object from the URL
 	list_ = List.objects.get(id=list_id)
 	if request.method == 'POST':
-		Item.objects.create(text=request.POST['item_text'],list=list_)
-		return redirect('/lists/%d/' % (list_.id,))
+		item=Item.objects.create(text=request.POST['item_text'],list=list_)
+		try:
+			item.full_clean()
+			item.save()
+			return redirect('/lists/%d/' % (list_.id,))
+		except ValidationError:
+			item.delete()
+			error = 'Impossible d\'avoir un élement Vide'
+			return render(request,'list.html', {'list':list_, 'error':error})
 	return render(request, 'list.html',{'list':list_})
 
 def new_list(request):
