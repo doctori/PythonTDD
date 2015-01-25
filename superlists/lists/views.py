@@ -12,7 +12,7 @@ def view_list(request,list_id):
 		try:
 			item.full_clean()
 			item.save()
-			return redirect('/lists/%d/' % (list_.id,))
+			return redirect(list_)
 		except ValidationError:
 			item.delete()
 			error = 'Impossible d\'avoir un élement Vide'
@@ -29,5 +29,5 @@ def new_list(request):
 		item.delete()
 		error = 'Impossible d\'avoir un élement Vide'
 		return render(request, 'home.html',{"error":error})
-	return redirect('/lists/%d/' % (list_.id,))
+	return redirect(list_)
 	
