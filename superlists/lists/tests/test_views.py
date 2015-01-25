@@ -30,7 +30,7 @@ class ListViewTest(TestCase):
 		self.assertEqual(new_item.text,'New Item on Existing List')
 		self.assertEqual(new_item.list, correct_list)
 		
-	def test_redirects_to_list_view(self):
+	def test_POST_redirects_to_list_view(self):
 		other_list = List.objects.create()
 		correct_list = List.objects.create()
 		response = self.client.post(
