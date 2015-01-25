@@ -8,7 +8,7 @@ from lists.models import Item, List
 
 from lists.views import home_page
 
-class NewItemTest(TestCase):
+class ListViewTest(TestCase):
 	def test_validation_errors_are_sent_back_to_home_page_template(self):
 		response = self.client.post('/lists/new', data={'item_text':''})
 		self.assertEqual(response.status_code, 200)
@@ -21,7 +21,7 @@ class NewItemTest(TestCase):
 		correct_list = List.objects.create()
 
 		self.client.post(
-			'/lists/%d/add_item' % (correct_list.id,),
+			'/lists/%d/' % (correct_list.id,),
 			data = {'item_text': 'New Item on Existing List'}
 			)
 			
@@ -29,11 +29,12 @@ class NewItemTest(TestCase):
 		new_item = Item.objects.first()
 		self.assertEqual(new_item.text,'New Item on Existing List')
 		self.assertEqual(new_item.list, correct_list)
+		
 	def test_redirects_to_list_view(self):
 		other_list = List.objects.create()
 		correct_list = List.objects.create()
 		response = self.client.post(
-			'/lists/%d/add_item' % (correct_list.id),
+			'/lists/%d/' % (correct_list.id),
 			data={'item_text': 'A new list Item'}
 		)
 		new_list = List.objects.last()
@@ -44,7 +45,6 @@ class NewItemTest(TestCase):
 		response = self.client.get('/lists/%d/' % (correct_list.id),)
 		self.assertEqual(response.context['list'],correct_list)
 		
-class ListViewTest(TestCase):
 	def test_uses_list_template(self):
 		list_ = List.objects.create()
 		response = self.client.get('/lists/%d/' % (list_.id,))
