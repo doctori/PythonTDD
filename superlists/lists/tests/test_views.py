@@ -1,4 +1,5 @@
 from django.core.urlresolvers import resolve
+from django.utils.html import escape
 from django.test import TestCase
 from django.http import HttpRequest
 from django.template.loader import render_to_string
@@ -8,6 +9,13 @@ from lists.models import Item, List
 from lists.views import home_page
 
 class NewItemTest(TestCase):
+	def test_validation_errors_are_sent_back_to_home_page_template(self):
+		response = self.client.post('/lists/new', data={'item_text':''})
+		self.assertEqual(response.status_code, 200)
+		self.assertTemplateUsed(response, 'home.html')
+		expected_error = escape("Impossible d'avoir un élement Vide")
+		self.assertContains(response, expected_error)
+		
 	def test_can_save_a_POST_request_to_an_existing_list(self):
 		other_list = List.objects.create()
 		correct_list = List.objects.create()
