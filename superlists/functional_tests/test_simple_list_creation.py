@@ -13,7 +13,7 @@ class NewVisitorTest(FunctionalTest):
 		self.assertIn('To-Do', header_text)
 		#le champ de saisi est bien centré
 		# L'utilisateur est invité a saisir une action 'To-Do'
-		inputbox = self.browser.find_element_by_id('id_new_item')
+		inputbox = self.get_item_input_box()
 		self.assertEqual(
 			inputbox.get_attribute('placeholder'),
 			'Enter a to-do item'
@@ -29,7 +29,7 @@ class NewVisitorTest(FunctionalTest):
 				
 		#Il reste un champ de saisie pour ajouter un item
 		# L'utilisateur y ajoute "Faire un mur"
-		inputbox = self.browser.find_element_by_id('id_new_item')
+		inputbox = self.get_item_input_box()
 		inputbox.send_keys('Faire un mur')
 		inputbox.send_keys(Keys.ENTER)		
 		self.check_for_row_in_list_table('1: Acheter du mortier')
@@ -47,7 +47,7 @@ class NewVisitorTest(FunctionalTest):
 		self.assertNotIn('Faire un mur',page_text)
 		
 		#user2 démare une nouvelle liste 
-		inputbox = self.browser.find_element_by_id('id_new_item')
+		inputbox = self.get_item_input_box()
 		inputbox.send_keys('Acheter des raisins')
 		inputbox.send_keys(Keys.ENTER)
 		#On doit arriver sur la liste complete de l'utilisateur 
