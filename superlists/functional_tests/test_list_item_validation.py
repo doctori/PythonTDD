@@ -29,6 +29,15 @@ class ItemValidationTest(FunctionalTest):
 		self.get_item_input_box().send_keys('Acheter du vin\n')
 		self.check_for_row_in_list_table('1: Acheter du pain')
 		self.check_for_row_in_list_table('2: Acheter du vin')
-			
+	def test_cannot_add_duplicate_items(self):
+		#L'utilisateur est sur la page d'accueil et saisi une nouvelle liste
+		self.browser.get(self.server_url)
+		self.get_item_input_box().send_keys('Acheter Du Mortier\n')
+		self.check_for_row_in_list_table('1: Acheter Du Mortier')
+		#L'utilisateur oublie qu'il a déjà saisi cet element et le re-saisi
+		self.get_item_input_box().send_keys('Acheter Du Mortier\n')
 		
+		#L'utilisateur reçoit un message d'avertissement sur le fait que l'element existe déjà
+		error = self.browser.find_element_by_css_selector('.has-error')
+		self.assertEqual(error.text, "L'element existe déjà")
 

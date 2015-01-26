@@ -110,7 +110,17 @@ class NewListTest(TestCase):
         )
 		new_list = List.objects.last()
 		self.assertRedirects(response,'/lists/%d/' % (new_list.id,))
-	
+	def test_for_invalid_input_renders_home_template(self):
+		response = self.client.post('/lists/new', data={'text':''})
+		self.assertEqual(response.status_code, 200)
+		self.assertTemplateUsed(response, 'home.html')
+	def test_for_validation_errors_are_shown_on_home_page(self):
+		response = self.client.post('/lists/new', data={'text':''})
+		self.assertContains(response, escape(EMPTY_ITEM_ERROR))
+	def test_for_invalid_input_passes_form_to_template(self):
+		response = self.client.post('/lists/new', data={'text':''})
+		self.assertIsInstance(response.context['form'],ItemForm)
+		
 	def test_new_list_only_saves_item_when_necessary(self):
 		self.client.post(
 			'/lists/new',
