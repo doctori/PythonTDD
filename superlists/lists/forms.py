@@ -1,7 +1,7 @@
 from django import forms
 from lists.models import Item
 
-EMPTY_ITEM_ERROR = "Impossible d\'avoir un élement Vide"
+EMPTY_ITEM_ERROR = 'Impossible d\'avoir un élement Vide'
 class ItemForm(forms.models.ModelForm):
 	class Meta:
 		model = Item

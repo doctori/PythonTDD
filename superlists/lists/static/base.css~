@@ -3,5 +3,5 @@
 	
 }
 #id_list_table > tbody > tr > td {
-	padding-left: 10ex;
+	padding-left: 3ex;
 }

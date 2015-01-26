@@ -11,25 +11,31 @@ from lists.views import home_page
 
 class ListViewTest(TestCase):
 	def test_for_invalid_input_renders_home_teplate(self):
-		response = self.client.post('/lists/new', data={'item_text':''})
+		response = self.client.post('/lists/new', data={'text':''})
 		self.assertEqual(response.status_code, 200)
 		self.assertTemplateUsed(response, 'home.html')
 		
 	def test_validation_errors_are_shown_on_home_page(self):
-		response = self.client.post('/lists/new', data={'item_text':''})
+		response = self.client.post('/lists/new', data={'text':''})
 		self.assertContains(response, escape(EMPTY_ITEM_ERROR))
 	
 	def test_for_invalid_input_passes_form_to_template(self):
-		response = self.client.post('/lists/new', data={'item_text':''})
+		response = self.client.post('/lists/new', data={'text':''})
 		self.assertIsInstance(response.context['form'],ItemForm)
-
+	
+	def test_displays_item_form(self):
+		list_ = List.objects.create()
+		response = self.client.get('/lists/%d/' % (list_.id,))
+		self.assertIsInstance(response.context['form'], ItemForm)
+		self.assertContains(response, 'name="text"')
+		
 	def test_can_save_a_POST_request_to_an_existing_list(self):
 		other_list = List.objects.create()
 		correct_list = List.objects.create()
 
 		self.client.post(
 			'/lists/%d/' % (correct_list.id,),
-			data = {'item_text': 'New Item on Existing List'}
+			data = {'text': 'New Item on Existing List'}
 			)
 			
 		self.assertEqual(Item.objects.count(),1)
@@ -42,15 +48,16 @@ class ListViewTest(TestCase):
 		correct_list = List.objects.create()
 		response = self.client.post(
 			'/lists/%d/' % (correct_list.id),
-			data={'item_text': 'A new list Item'}
+			data={'text': 'A new list Item'}
 		)
 		new_list = List.objects.last()
 		self.assertRedirects(response,'/lists/%d/' % (correct_list.id,))
+	
 	def test_validation_errors_end_up_on_lists_pages(self):
 		list_ = List.objects.create()
 		response = self.client.post(
 			'/lists/%d/' % (list_.id,),
-			data = {'item_text': ''}
+			data = {'text': ''}
 		)
 		self.assertEqual(response.status_code,200)
 		self.assertTemplateUsed(response, 'list.html')
@@ -89,7 +96,7 @@ class NewListTest(TestCase):
 	def test_saving_a_POST_request(self):
 		self.client.post(
 			'/lists/new',
-			data={'item_text': 'A new list Item'}
+			data={'text': 'A new list Item'}
         )
 		self.assertEqual(Item.objects.count(), 1)
 		new_item = Item.objects.first()
@@ -99,7 +106,7 @@ class NewListTest(TestCase):
 		list_ = List.objects.create()
 		response = self.client.post(
 			'/lists/new',
-			data={'item_text': 'A new list Item'}
+			data={'text': 'A new list Item'}
         )
 		new_list = List.objects.last()
 		self.assertRedirects(response,'/lists/%d/' % (new_list.id,))
@@ -107,7 +114,7 @@ class NewListTest(TestCase):
 	def test_new_list_only_saves_item_when_necessary(self):
 		self.client.post(
 			'/lists/new',
-			data={'item_text': ''}
+			data={'item': ''}
 		)
 		self.assertEqual(Item.objects.count(), 0)	
 		
