@@ -4,16 +4,19 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
 class ItemValidationTest(FunctionalTest):
+	def get_error_element(self):
+		return self.browser.find_element_by_css_selector('.has-error')
+		
 	def test_error_messages_are_cleared_on_input(self):
 		#Creation d'une liste qui genere une erreur :
 		self.browser.get(self.server_url)
 		self.get_item_input_box().send_keys('\n')
-		error = self.browser.find_element_by_css_selector('.has-error')
+		error = self.get_error_element()
 		self.assertTrue(error.is_displayed())
 		
 		#l'utilisateur corrige l'erreur
 		self.get_item_input_box().send_keys('yeah sorry')
-		error = self.browser.find_element_by_css_selector('.has-error')
+		error = self.get_error_element()
 		self.assertFalse(error.is_displayed())
 		
 	def test_cannot_add_empty_list_item(self):
@@ -23,7 +26,7 @@ class ItemValidationTest(FunctionalTest):
 		self.get_item_input_box().send_keys('\n')	
 		
 		#rafraichissement de la page principale avec un message d'erreur
-		error = self.browser.find_element_by_css_selector('.has-error')
+		error = self.get_error_element()
 		self.assertEqual(error.text, 'Impossible d\'avoir un élement Vide')
 		
 		#L'utilisateur saisi maintenant une valeur correcte et appuie sur entré et ça fonctionne normalement
@@ -34,7 +37,7 @@ class ItemValidationTest(FunctionalTest):
 		self.get_item_input_box().send_keys('\n')
 		
 		# le même message d'erreur que a premiere fois est affiché
-		error = self.browser.find_element_by_css_selector('.has-error')
+		error = self.get_error_element()
 		self.assertEqual(error.text, 'Impossible d\'avoir un élement Vide')
 		
 		# L'utilisateur saisie cette fois une valeur correcte
@@ -50,6 +53,6 @@ class ItemValidationTest(FunctionalTest):
 		self.get_item_input_box().send_keys('Acheter Du Mortier\n')
 		
 		#L'utilisateur reçoit un message d'avertissement sur le fait que l'element existe déjà
-		error = self.browser.find_element_by_css_selector('.has-error')
+		error = self.get_error_element()
 		self.assertEqual(error.text, "L'element existe déjà")
 
