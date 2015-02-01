@@ -23,5 +23,5 @@ class PersonaAuthenticationBackend(object):
 	def get_user(self,email):
 		try : 
 			return User.objects.get(email=email)
-		except UserDoesNotExist:
+		except User.DoesNotExist:
 			return None
