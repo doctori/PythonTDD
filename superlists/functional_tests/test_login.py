@@ -11,22 +11,30 @@ class LoginTest(FunctionalTest):
 		self.browser.find_element_by_id('id_login').click()
 
 		# A Persona login box appears
-		self.switch_to_new_window('Mozilla Persona')  #1
+		self.switch_to_new_window('Mozilla Persona')
 
 		# Edith logs in with her email address
 		## Use mockmyid.com for test email
 		self.browser.find_element_by_id(
-			'authentication_email'  #2
-		).send_keys('edith@mockmyid.com') #3
+			'authentication_email'
+		).send_keys('DummyOne@mockmyid.com')
 		self.browser.find_element_by_tag_name('button').click()
 
 		# The Persona window closes
 		self.switch_to_new_window('To-Do')
 
 		# She can see that she is logged in
-		self.wait_for_element_with_id('id_logout')  #4
+		self.wait_for_element_with_id('id_logout')
 		navbar = self.browser.find_element_by_css_selector('.navbar')
-		self.assertIn('edith@mockmyid.com', navbar.text)
+		self.assertIn('DummyOne@mockmyid.com', navbar.text)
+		
+		# After a refresh the logout div should still be there
+		
+		self.browser.refresh()
+		self.wait_for_element_with_id('id_logout')
+		navbar = self.browser.get_element_by_css_selector('.navbar')
+		self.assertIn('DummyOne@mockmyid.com', navbar.text)
+		
 	def wait_for_element_with_id(self, element_id):
 		WebDriverWait(self.browser, timeout=30).until(
 			lambda b: b.find_element_by_id(element_id)
