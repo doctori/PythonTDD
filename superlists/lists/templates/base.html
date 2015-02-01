@@ -38,5 +38,20 @@
 	</div>
 	<script src="/static/jquery.min.js"></script>
 	<script src="/static/lists.js"></script>
+	<script src="/static/accounts.js"></script>
+	<script src="/static/include.js"></script>
+	<script>
+		/*global $, Superlists, navigator */
+		$(document).ready(function(){
+			var user = "{{ user.email }}" || null;
+			var token = "{{ csrf_token }}";
+			var urls = {
+				login: "TODO",
+				logout: "TODO",
+			};
+			Superlists.Accounts.initialize(navigator, user, token, urls);
+
+		});
+	</script>
 	</body>
 </html>

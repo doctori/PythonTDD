@@ -7,6 +7,10 @@
 	</head>
 	<body>
 	<div class="container">
+		<nav class="navbar navbar-default" role="navigation">
+			<a class="navbar-brand" href="/">PackageManager</a>
+			<a class="btn navbar-btn navbar-right" id="id_login" href="#">Sign in</a>
+		</nav>
 		<div class="row">
 			<div class="col-md-6 col-md-offset-3 jumbotron">
 		        <div class="text-center">		
@@ -34,5 +38,20 @@
 	</div>
 	<script src="/static/jquery.min.js"></script>
 	<script src="/static/lists.js"></script>
+	<script src="/static/accounts.js"></script>
+	<script src="/static/include.js"></script>
+	<script>
+		/*global $, Superlists, navigator */
+		$(document).ready(function(){
+			var user = "{{ user.email }}" || null;
+			var token = "{{ csrf_token }}";
+			var urls = {
+				login: "TODO",
+				logout: "TODO",
+			};
+			Superlists.Accounts.initialize(navigator, user, token, urls);
+
+		});
+	</script>
 	</body>
 </html>
