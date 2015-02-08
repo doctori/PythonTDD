@@ -1,7 +1,7 @@
 import time
 from .base import FunctionalTest
 
-TEST_EMAIL = 'edith@mockmyid.com'
+TEST_EMAIL = 'patrick.mouche@mockmyid.com'
 
 
 class LoginTest(FunctionalTest):
