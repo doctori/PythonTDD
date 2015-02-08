@@ -1,10 +1,11 @@
 from django.contrib.auth import get_user_model, SESSION_KEY
 from django.test import TestCase
+from django.conf import settings
 from mock import patch
 User = get_user_model()
 
 from accounts.authentication import (
-	PERSONA_VERIFY_URL, DOMAIN, PersonaAuthenticationBackend
+	PERSONA_VERIFY_URL,PersonaAuthenticationBackend
 )
 
 @patch('accounts.authentication.requests.post')
@@ -20,7 +21,7 @@ class testAuthentication(TestCase):
 		self.backend.authenticate('assert this')
 		mock_post.assert_called_once_with(
 			PERSONA_VERIFY_URL,
-			data={'assertion':'assert this','audience':DOMAIN}
+			data={'assertion':'assert this','audience':settings.DOMAIN}
 		)
 
 	def test_returns_none_if_response_error(self, mock_post):
